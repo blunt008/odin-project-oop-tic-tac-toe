@@ -122,28 +122,35 @@ class Game
     def ask_for_names(mode)
         print "Enter Player 1 name: "
         player1_name = gets.chomp
-        print "Enter Player 2 name: "
-        player2_name = gets.chomp
-        
-        print "Enter #{player1_name}'s symbol (X/O): "
+        print "Enter #{player1_name}'s symbol (e.g. X/O): "
         player1_mark = gets.chomp
-        while player1_mark != "X" && player1_mark != "O" do 
-            print "Enter #{player1_name}'s symbol (X/O): "
+        while player1_mark.length > 1 do
+            puts "Can't be longer than 1 char!" 
+            print "Enter #{player1_name}'s symbol (e.g. X/O): "
             player1_mark = gets.chomp
         end
-        puts "#{player1_name} is #{player1_mark}"
         
-        if player1_mark == "X"
-            player2_mark = "O"
-        else
-            player2_mark = "X"
-        end 
-        puts "#{player2_name} is #{player2_mark}"
         if mode == "pvp" 
+            print "Enter Player 2 name: "
+            player2_name = gets.chomp
+            print "Enter #{player2_name}'s symbol (e.g. X/O): "
+            player2_mark = gets.chomp
+            while player2_mark.length > 1 || player1_mark == player2_mark do
+                if player2_mark == player1_mark 
+                    puts "Symbol already taken by player 1."
+                    print "Enter #{player2_mark}'s symbol (e.g. X/O): "
+                    player2_mark = gets.chomp
+                elsif player2_mark.length > 2 
+                    puts "Can't be longer than 1 char!"
+                    print "Enter #{player2_mark}'s symbol (e.g. X/O): "
+                    player2_mark = gets.chomp
+                end  
+            end
             player1 = Human.new(player1_name, player1_mark)
             player2 = Human.new(player2_name, player2_mark)
             return player1, player2
         elsif mode == "pve"
+            player2_mark = player1_mark == "X" ? "O" : "X"
             print "Enter difficulty easy/medium/hard: "
             level = gets.chomp 
 
@@ -151,8 +158,22 @@ class Game
                 print "Enter difficulty easy/medium/hard: "
                 level = gets.chomp 
             end
-            player1 = Human.new(player1_name, player1_mark)
-            player2 = Computer.new(player2_name, player2_mark, level)
+
+            print "Computer to start? [y/n]: "
+            start = gets.chomp
+
+            while start != "y" && start != "n" do 
+                print "Computer to start? [y/n]: "
+                start = gets.chomp
+            end 
+
+            if start == "y"
+                player2 = Human.new(player1_name, player1_mark)    
+                player1 = Computer.new("Computer", player2_mark, level)
+            else
+                player1 = Human.new(player1_name, player1_mark)
+                player2 = Computer.new(player2_name, player2_mark, level)
+            end 
             return player1, player2
         end 
     end 
