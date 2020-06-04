@@ -15,6 +15,7 @@ class Game
         ]
         @board = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
         @counter = 0 
+        @winner = ""
     end 
 
     def display_board
@@ -24,13 +25,11 @@ class Game
         row0 = "\t#{@board[0]}\t|\t#{@board[1]}\t|\t#{@board[2]}\t"
         row1 = "\t#{@board[3]}\t|\t#{@board[4]}\t|\t#{@board[5]}\t"
         row2 = "\t#{@board[6]}\t|\t#{@board[7]}\t|\t#{@board[8]}\t"
-        
         puts empty_row + "\n" + row0 + "\n" + empty_row + "\n" + separator + "\n" + empty_row + "\n" + row1 + "\n" + empty_row + "\n" + separator + "\n" + empty_row + "\n" + row2 + "\n" + empty_row
     end 
     
     def start_game
-        while true 
-            system("clear")
+        while @started == true 
             puts "Welcome to the tic tac toe!"
             puts  
             puts "Choose a mode: \n" \
@@ -86,6 +85,8 @@ class Game
     end 
 
     def restart
+        display_board()
+        puts @winner
         print "Would you like to play again? [y/N] "
         answer = gets.chomp.downcase 
         while answer != "y" && answer != "n" do 
@@ -103,17 +104,17 @@ class Game
 
     def check_game_state(player) 
         if @counter == 8
-            puts "We have a draw!"
-            @started = false 
             display_board()
+            @winner = "We have a draw!"
+            @started = false 
         else 
-            display_board() 
+            display_board()
             @counter += 1 
         end 
         @winning_combinations.each do |combo| 
             if combo & player.previous_moves == combo 
-                # display_board()
-                puts "We have a winner! Congrats #{player.name}"
+                display_board()
+                @winner = "We have a winner! Congrats #{player.name}"
                 @started = false 
             end 
         end 
