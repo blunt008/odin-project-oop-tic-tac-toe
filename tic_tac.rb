@@ -4,14 +4,14 @@ class Game
     def initialize
         @started = true 
         @winning_combinations = [
-            ["1", "2", "3"],
-            ["4", "5", "6"],
-            ["7", "8", "9"],
-            ["1", "4", "7"],
-            ["2", "5", "8"],
-            ["3", "6", "9"],
-            ["1", "5", "9"],
-            ["3", "5", "7"]
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 7],
+            [1, 4, 8],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
         ]
         @board = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
         @counter = 0 
@@ -65,8 +65,10 @@ class Game
         display_board()
         while @started == true 
             player1.make_move(@winning_combinations, @board)
+            p player1.previous_moves
             check_game_state(player1)
             if @started == false then break end 
+            p player2.previous_moves
             player2.make_move(@winning_combinations, @board)
             check_game_state(player2)
         end 
@@ -170,10 +172,10 @@ class Game
 
             if start == "y"
                 player2 = Human.new(player1_name, player1_mark)    
-                player1 = Computer.new("Computer", player2_mark, level)
+                player1 = Computer.new("Computer", player2_mark, level, true)
             else
                 player1 = Human.new(player1_name, player1_mark)
-                player2 = Computer.new(player2_name, player2_mark, level)
+                player2 = Computer.new(player2_name, player2_mark, level, false)
             end 
             return player1, player2
         end 
